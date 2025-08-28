@@ -10,7 +10,7 @@ const initialFormState = {
   contact: "",
   joinDate: "",
   endDate: "",
-  isContinuing: false, // 👈 NEW FLAG
+  isContinuing: false,
   gender: "",
   university: "",
   domain: "",
@@ -73,9 +73,7 @@ const InternshipsSection = () => {
     setError(null);
 
     const payload = { ...formData };
-    if (formData.isContinuing) {
-      payload.endDate = ""; // 👈 If continuing, remove endDate
-    }
+    if (formData.isContinuing) payload.endDate = "";
 
     try {
       if (isEditing) {
@@ -89,10 +87,7 @@ const InternshipsSection = () => {
           )
         );
       } else {
-        const res = await axios.post(
-          "http://localhost:5000/api/interns",
-          payload
-        );
+        const res = await axios.post("http://localhost:5000/api/interns", payload);
         setInternships((prev) => [res.data, ...prev]);
       }
       setFormData(initialFormState);
@@ -108,9 +103,7 @@ const InternshipsSection = () => {
 
   const handleSoftDelete = async (id) => {
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/interns/soft-delete/${id}`
-      );
+      const res = await axios.put(`http://localhost:5000/api/interns/soft-delete/${id}`);
       setInternships((prev) =>
         prev.map((intern) =>
           intern._id === res.data._id ? { ...intern, deleted: true } : intern
@@ -128,7 +121,7 @@ const InternshipsSection = () => {
       endDate: intern.endDate
         ? new Date(intern.endDate).toISOString().split("T")[0]
         : "",
-      isContinuing: !intern.endDate, // 👈 if no endDate → continuing
+      isContinuing: !intern.endDate,
     });
     setIsEditing(true);
     setShowForm(true);
@@ -141,13 +134,13 @@ const InternshipsSection = () => {
   };
 
   return (
-    <div className="flex-1 p-8 bg-gray-100 min-h-screen">
+    <div className="flex-1 p-4 md:p-8 bg-gray-100 min-h-screen">
       <Header />
 
-      <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-        <div className="flex justify-between items-center mb-4">
+      <div className="bg-white p-4 md:p-6 rounded-lg shadow-md mt-6">
+        <div className="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-4">
           <div>
-            <h2 className="text-xl font-medium text-gray-800">
+            <h2 className="text-lg md:text-xl font-medium text-gray-800">
               All Internships
             </h2>
             <p className="text-gray-500 text-sm">
@@ -155,18 +148,16 @@ const InternshipsSection = () => {
             </p>
           </div>
           {!showForm && (
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search intern"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-8 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+              <input
+                type="text"
+                placeholder="Search intern"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full sm:w-64 pl-3 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
               <button
-                className="bg-blue-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                className="bg-blue-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 w-full sm:w-auto"
                 onClick={() => setShowForm(true)}
               >
                 Register intern
@@ -177,21 +168,23 @@ const InternshipsSection = () => {
 
         {/* 🚀 FORM */}
         {showForm && (
-          <div className="bg-gray-50 p-6 rounded-lg shadow-md mt-6">
-            <h3 className="text-lg font-semibold mb-4">
+          <div className="bg-gray-50 p-4 md:p-6 rounded-lg shadow-md mt-6">
+            <h3 className="text-base md:text-lg font-semibold mb-4">
               {isEditing ? "Edit Intern" : "Register Intern"}
             </h3>
-            <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+            <form
+              onSubmit={handleSubmit}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
               {/* Basic Info */}
               <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" className="p-2 border rounded" required />
               <input type="text" name="contact" value={formData.contact} onChange={handleChange} placeholder="Contact" className="p-2 border rounded" required />
               <input type="date" name="joinDate" value={formData.joinDate} onChange={handleChange} className="p-2 border rounded" required />
 
-              {/* End Date or Continue */}
               {!formData.isContinuing && (
                 <input type="date" name="endDate" value={formData.endDate} onChange={handleChange} className="p-2 border rounded" />
               )}
-              <label className="flex items-center gap-2 text-sm col-span-2">
+              <label className="flex items-center gap-2 text-sm col-span-1 md:col-span-2">
                 <input type="checkbox" name="isContinuing" checked={formData.isContinuing} onChange={handleChange} />
                 Still Continuing
               </label>
@@ -215,9 +208,11 @@ const InternshipsSection = () => {
               </select>
 
               {/* Buttons */}
-              <div className="col-span-2 flex justify-end gap-4 mt-4">
-                <button type="button" onClick={handleCancelEdit} className="px-4 py-2 bg-gray-500 text-white rounded-lg">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg">{isEditing ? "Update" : "Save"}</button>
+              <div className="col-span-1 md:col-span-2 flex flex-col sm:flex-row justify-end gap-3 mt-4">
+                <button type="button" onClick={handleCancelEdit} className="px-4 py-2 bg-gray-500 text-white rounded-lg w-full sm:w-auto">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg w-full sm:w-auto">
+                  {isEditing ? "Update" : "Save"}
+                </button>
               </div>
             </form>
           </div>
@@ -225,7 +220,13 @@ const InternshipsSection = () => {
 
         {/* ✅ Table */}
         {!loading && !error && !showForm && (
-          <InternshipTable data={filteredInternships} onEdit={handleEdit} onSoftDelete={handleSoftDelete} />
+          <div className="overflow-x-auto">
+            <InternshipTable
+              data={filteredInternships}
+              onEdit={handleEdit}
+              onSoftDelete={handleSoftDelete}
+            />
+          </div>
         )}
 
         {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">{error}</div>}
@@ -233,7 +234,10 @@ const InternshipsSection = () => {
       </div>
 
       <div className="mt-4">
-        <button onClick={() => navigate("/admin-dashboard")} className="bg-blue-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+        <button
+          onClick={() => navigate("/admin-dashboard")}
+          className="bg-blue-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 w-full sm:w-auto"
+        >
           ← Back to Dashboard
         </button>
       </div>

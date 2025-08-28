@@ -1,7 +1,7 @@
 import React from "react";
 import {
   PieChart, Pie, Cell,
-  BarChart, Bar, XAxis, YAxis, Tooltip, Legend
+  BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
 } from "recharts";
 
 const Charts = ({ interns }) => {
@@ -31,7 +31,7 @@ const Charts = ({ interns }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       {/* This Month Count */}
-      <div className="bg-white shadow p-4 rounded-lg">
+      <div className="bg-white shadow p-4 rounded-lg text-center">
         <h2 className="font-semibold mb-2">Interns Joined This Month</h2>
         <p className="text-3xl font-bold">{monthlyInterns}</p>
       </div>
@@ -39,40 +39,48 @@ const Charts = ({ interns }) => {
       {/* Training vs Internship */}
       <div className="bg-white shadow p-4 rounded-lg">
         <h2 className="font-semibold mb-2">Training vs Internship</h2>
-        <BarChart width={300} height={200} data={[
-          { name: "Training", value: trainingCount },
-          { name: "Internship", value: internshipCount },
-        ]}>
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="value" fill="#82ca9d" />
-        </BarChart>
+        <div className="w-full h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={[
+              { name: "Training", value: trainingCount },
+              { name: "Internship", value: internshipCount },
+            ]}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="value" fill="#82ca9d" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       {/* Technology Distribution */}
-      <div className="bg-white shadow p-4 rounded-lg col-span-2">
+      <div className="bg-white shadow p-4 rounded-lg col-span-1 md:col-span-2">
         <h2 className="font-semibold mb-2">Technology Distribution</h2>
-        <PieChart width={400} height={250}>
-          <Pie
-            data={techData}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius={100}
-            label
-          >
-            {techData.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={["#8884d8", "#82ca9d", "#ffc658", "#ff7f50"][index % 4]}
-              />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
+        <div className="w-full h-72">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={techData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius="80%"
+                label
+              >
+                {techData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={["#8884d8", "#82ca9d", "#ffc658", "#ff7f50"][index % 4]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

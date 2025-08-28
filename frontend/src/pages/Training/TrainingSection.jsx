@@ -118,35 +118,35 @@ const TrainingsSection = () => {
     }
   };
 
-  // Filter trainings based on search term
   const filteredTrainings = trainings.filter(
     (t) =>
       !t.deleted &&
       (t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-       t.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-       t.university.toLowerCase().includes(searchTerm.toLowerCase()))
+        t.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        t.university.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
-    <div className="flex-1 p-8 bg-gray-100 min-h-screen">
+    <div className="flex-1 p-4 sm:p-6 md:p-8 bg-gray-100 min-h-screen">
       <Header />
 
-      <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-        <div className="flex justify-between items-center mb-4">
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4">
           <div>
-            <h2 className="text-xl font-medium text-gray-800">All Trainings</h2>
+            <h2 className="text-xl font-semibold text-gray-800">All Trainings</h2>
             <p className="text-gray-500 text-sm">
               Track students training progress & fees
             </p>
           </div>
           {!showForm && (
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
               <input
                 type="text"
                 placeholder="Search student"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-8 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="pl-3 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
               />
               <button
                 onClick={() => setShowForm(true)}
@@ -158,10 +158,11 @@ const TrainingsSection = () => {
           )}
         </div>
 
+        {/* Form */}
         {showForm && (
           <form
             onSubmit={handleSubmit}
-            className="grid grid-cols-2 gap-4 bg-gray-50 p-6 rounded-lg"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-6 rounded-lg"
           >
             <input
               type="text"
@@ -199,7 +200,7 @@ const TrainingsSection = () => {
                 className="border p-2 rounded"
               />
             )}
-            <label className="flex items-center gap-2 col-span-2">
+            <label className="flex items-center gap-2 col-span-1 md:col-span-2">
               <input
                 type="checkbox"
                 name="isContinuing"
@@ -259,7 +260,8 @@ const TrainingsSection = () => {
               required
             />
 
-            <div className="col-span-2 flex justify-end gap-3">
+            {/* Buttons */}
+            <div className="col-span-1 md:col-span-2 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
@@ -277,6 +279,7 @@ const TrainingsSection = () => {
           </form>
         )}
 
+        {/* Table */}
         {!loading && !error && !showForm && (
           <TrainingTable
             data={filteredTrainings}
@@ -284,16 +287,18 @@ const TrainingsSection = () => {
             onSoftDelete={handleSoftDelete}
           />
         )}
-        
       </div>
+
+      {/* Back button */}
       <div className="mt-4">
-        <button onClick={() => navigate("/admin-dashboard")} className="bg-blue-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+        <button
+          onClick={() => navigate("/admin-dashboard")}
+          className="bg-blue-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+        >
           ← Back to Dashboard
         </button>
       </div>
-      
     </div>
-    
   );
 };
 

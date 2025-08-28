@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Charts from "../pages/charts/Charts";
 import InternshipsSection from "../pages/InternshipTable/InternshipsSection";
-import Header from "../components/Header"; // 👈 import Header
+import Header from "../components/Header"; // ✅ Reusable Header
 
 const Dashboard = () => {
   const [interns, setInterns] = useState([]);
@@ -28,27 +28,13 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="flex-1 p-8 bg-gray-100 min-h-screen">
-      {/* ✅ Header (now reusable across pages) */}
+    <div className="flex-1 p-4 sm:p-6 lg:p-8 bg-gray-100 min-h-screen">
+      {/* ✅ Header */}
       <Header />
 
-      {/* Charts */}
-      <Charts interns={interns} />
-
-      {/* Buttons */}
-      <div className="mt-10 flex gap-4">
-      <button
-        onClick={() => navigate("/internships")}
-        className="bg-blue-600 text-white px-4 py-2 rounded-lg"
-      >
-        Internships
-      </button>
-        <button
-          onClick={() => navigate("/training")}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg"
-        >
-          Training
-        </button>
+      {/* Charts Section */}
+      <div className="mt-6 bg-white p-4 sm:p-6 rounded-xl shadow-md w-full overflow-x-auto">
+        <Charts interns={interns} />
       </div>
     </div>
   );
