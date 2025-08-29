@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const trainingSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  contact: { type: String, required: true },
+  contact: { type: String },
   joinDate: { type: Date, required: true },
   endDate: { type: Date },
   isContinuing: { type: Boolean, default: false },

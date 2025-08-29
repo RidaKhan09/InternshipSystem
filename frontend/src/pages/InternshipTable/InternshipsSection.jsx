@@ -30,6 +30,7 @@ const InternshipsSection = () => {
 
   const navigate = useNavigate();
 
+  // Fetch all interns
   useEffect(() => {
     const fetchInterns = async () => {
       setLoading(true);
@@ -47,6 +48,7 @@ const InternshipsSection = () => {
     fetchInterns();
   }, []);
 
+  // Filter interns by search term
   useEffect(() => {
     const results = internships.filter(
       (intern) =>
@@ -57,23 +59,31 @@ const InternshipsSection = () => {
     setFilteredInternships(results);
   }, [searchTerm, internships]);
 
+  // Handle form input changes
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, checked } = e.target;
+
     setFormData((prev) => {
       if (name === "isContinuing") {
-        return { ...prev, isContinuing: checked, endDate: checked ? "" : prev.endDate };
+        return {
+          ...prev,
+          isContinuing: checked,
+          endDate: checked ? "" : prev.endDate, // ✅ empty string for input
+        };
       }
       return { ...prev, [name]: value };
     });
   };
 
+  // Submit form (create or update)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     const payload = { ...formData };
-    if (formData.isContinuing) payload.endDate = "";
+    if (formData.isContinuing) payload.endDate = null; // backend gets null
+    
 
     try {
       if (isEditing) {
@@ -101,6 +111,7 @@ const InternshipsSection = () => {
     }
   };
 
+  // Soft delete intern
   const handleSoftDelete = async (id) => {
     try {
       const res = await axios.put(`http://localhost:5000/api/interns/soft-delete/${id}`);
@@ -114,18 +125,19 @@ const InternshipsSection = () => {
     }
   };
 
-  const handleEdit = (intern) => {
-    setFormData({
-      ...intern,
-      joinDate: new Date(intern.joinDate).toISOString().split("T")[0],
-      endDate: intern.endDate
-        ? new Date(intern.endDate).toISOString().split("T")[0]
-        : "",
-      isContinuing: !intern.endDate,
-    });
-    setIsEditing(true);
-    setShowForm(true);
-  };
+// Edit intern
+const handleEdit = (intern) => {
+  setFormData({
+    ...intern,
+    joinDate: new Date(intern.joinDate).toISOString().split("T")[0],
+    endDate: intern.endDate === "Continue" ? "" : new Date(intern.endDate).toISOString().split("T")[0],
+    isContinuing: intern.endDate === "Continue", // ✅ checkbox check if continuing
+  });
+  
+  setIsEditing(true);
+  setShowForm(true);
+};
+
 
   const handleCancelEdit = () => {
     setFormData(initialFormState);
@@ -166,7 +178,7 @@ const InternshipsSection = () => {
           )}
         </div>
 
-        {/* 🚀 FORM */}
+        {/* FORM */}
         {showForm && (
           <div className="bg-gray-50 p-4 md:p-6 rounded-lg shadow-md mt-6">
             <h3 className="text-base md:text-lg font-semibold mb-4">
@@ -176,9 +188,8 @@ const InternshipsSection = () => {
               onSubmit={handleSubmit}
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
-              {/* Basic Info */}
               <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" className="p-2 border rounded" required />
-              <input type="text" name="contact" value={formData.contact} onChange={handleChange} placeholder="Contact" className="p-2 border rounded" required />
+              <input type="text" name="contact" value={formData.contact} onChange={handleChange} placeholder="Contact" className="p-2 border rounded" />
               <input type="date" name="joinDate" value={formData.joinDate} onChange={handleChange} className="p-2 border rounded" required />
 
               {!formData.isContinuing && (
@@ -194,7 +205,7 @@ const InternshipsSection = () => {
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
-              <input type="text" name="university" value={formData.university} onChange={handleChange} placeholder="University" className="p-2 border rounded" required />
+              <input type="text" name="university" value={formData.university} onChange={handleChange} placeholder="University" className="p-2 border rounded" />
               <input type="text" name="domain" value={formData.domain} onChange={handleChange} placeholder="Domain" className="p-2 border rounded" required />
 
               <select name="type" value={formData.type} onChange={handleChange} className="p-2 border rounded" required>
@@ -207,7 +218,6 @@ const InternshipsSection = () => {
                 <option value="unpaid">Unpaid</option>
               </select>
 
-              {/* Buttons */}
               <div className="col-span-1 md:col-span-2 flex flex-col sm:flex-row justify-end gap-3 mt-4">
                 <button type="button" onClick={handleCancelEdit} className="px-4 py-2 bg-gray-500 text-white rounded-lg w-full sm:w-auto">Cancel</button>
                 <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg w-full sm:w-auto">
@@ -218,7 +228,7 @@ const InternshipsSection = () => {
           </div>
         )}
 
-        {/* ✅ Table */}
+        {/* Table */}
         {!loading && !error && !showForm && (
           <div className="overflow-x-auto">
             <InternshipTable

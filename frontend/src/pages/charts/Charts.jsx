@@ -1,88 +1,76 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
-  PieChart, Pie, Cell,
-  BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
+  BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid
 } from "recharts";
 
-const Charts = ({ interns }) => {
-  if (!interns.length) return <p>No data available</p>;
+const Charts = () => {
+  const [stats, setStats] = useState({
+    trainingCount: 0,
+    internshipCount: 0,
+    totalInterns: 0,
+  });
 
-  // 🔹 This Month Interns
-  const currentMonth = new Date().getMonth();
-  const monthlyInterns = interns.filter(
-    (i) => new Date(i.startDate).getMonth() === currentMonth
-  ).length;
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/admin/stats");
+        console.log("Fetched stats:", res.data);
+  
+        setStats({
+          internshipCount: res.data.internshipCount,
+          trainingCount: res.data.trainingCount,
+          totalInterns: res.data.totalInterns,
+        });
+      } catch (err) {
+        console.error("Error fetching stats:", err);
+      }
+    };
+    fetchStats();
+  }, []);
+  
+  
 
-  // 🔹 Training vs Internship
-  const trainingCount = interns.filter((i) => i.type === "training").length;
-  const internshipCount = interns.filter((i) => i.type === "internship").length;
-
-  // 🔹 Tech Distribution
-  const techGroups = interns.reduce((acc, intern) => {
-    acc[intern.technology] = (acc[intern.technology] || 0) + 1;
-    return acc;
-  }, {});
-
-  const techData = Object.entries(techGroups).map(([key, value]) => ({
-    name: key,
-    value,
-  }));
+  const barData = [
+    { name: "Training", value: stats.trainingCount },
+    { name: "Internship", value: stats.internshipCount },
+  ];
+  
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* This Month Count */}
-      <div className="bg-white shadow p-4 rounded-lg text-center">
-        <h2 className="font-semibold mb-2">Interns Joined This Month</h2>
-        <p className="text-3xl font-bold">{monthlyInterns}</p>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      {/* Stats cards */}
+      <div className="bg-white shadow p-6 rounded-lg text-center">
+        <h2 className="font-semibold text-lg mb-2">Total Interns</h2>
+        <p className="text-4xl font-bold text-indigo-600">{stats.internshipCount}</p>
       </div>
 
-      {/* Training vs Internship */}
-      <div className="bg-white shadow p-4 rounded-lg">
-        <h2 className="font-semibold mb-2">Training vs Internship</h2>
+      <div className="bg-white shadow p-6 rounded-lg text-center">
+        <h2 className="font-semibold text-lg mb-2">Total Training</h2>
+        <p className="text-4xl font-bold text-green-600">{stats.trainingCount}</p>
+      </div>
+
+      {/* Training vs Internship Bar Chart */}
+      <div className="bg-white shadow p-6 rounded-lg md:col-span-2">
+        <h2 className="font-semibold text-lg mb-2">Training vs Internship</h2>
         <div className="w-full h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={[
-              { name: "Training", value: trainingCount },
-              { name: "Internship", value: internshipCount },
-            ]}>
+            <BarChart data={barData}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="value" fill="#82ca9d" />
+              <Bar dataKey="value" fill="#2b7fff" />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Technology Distribution */}
-      <div className="bg-white shadow p-4 rounded-lg col-span-1 md:col-span-2">
-        <h2 className="font-semibold mb-2">Technology Distribution</h2>
-        <div className="w-full h-72">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={techData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius="80%"
-                label
-              >
-                {techData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={["#8884d8", "#82ca9d", "#ffc658", "#ff7f50"][index % 4]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+  
       </div>
-    </div>
+
+   
   );
 };
 
