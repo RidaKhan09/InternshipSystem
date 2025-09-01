@@ -1,6 +1,4 @@
-// models/User.js
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";      
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -10,6 +8,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Email is required"],
+    unique: true,
   },
   password: {
     type: String,
@@ -17,8 +16,9 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["admin", "employee"],
-    required: [true, "Role is required"],  
+    enum: ["superadmin", "admin", "employee"],
+    default: "employee",
+    required: [true, "Role is required"],
   },
   profileImage: {
     type: String,
@@ -32,6 +32,6 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-const User = mongoose.model("User", userSchema);
 
+const User = mongoose.model("User", userSchema);
 export default User;

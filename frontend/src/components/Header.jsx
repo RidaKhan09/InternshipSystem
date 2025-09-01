@@ -41,9 +41,9 @@ const Header = () => {
                   {getInitial(user.name)}
                 </div>
               )}
-              <span className="hidden sm:inline font-medium text-gray-700">
+              {/* <span className="hidden sm:inline font-medium text-gray-700">
                 {user.name}
-              </span>
+              </span> */}
             </div>
 
             {/* Dropdown */}

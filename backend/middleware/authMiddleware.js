@@ -1,4 +1,3 @@
-// middlewares/authMiddleware.js
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
@@ -13,6 +12,16 @@ const authMiddleware = async (req, res, next) => {
   } catch (err) {
     res.status(401).json({ message: "Invalid token" });
   }
+};
+
+// 🔑 role-based guard
+export const authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+    next();
+  };
 };
 
 export default authMiddleware;

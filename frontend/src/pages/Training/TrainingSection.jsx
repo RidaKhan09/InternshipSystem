@@ -4,6 +4,7 @@ import axios from "axios";
 import Header from "../../components/Header";
 import TrainingTable from "./TrainingTable";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux"; 
 
 const initialFormState = {
   name: "",
@@ -25,7 +26,8 @@ const TrainingsSection = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
+  // 👇 user role le lo redux se
+const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -281,9 +283,13 @@ const TrainingsSection = () => {
 
       {/* Back button */}
       <div className="mt-4">
-        <button
-          onClick={() => navigate("/admin-dashboard")}
-          className="bg-blue-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+      <button
+          onClick={() =>
+            user?.role === "superadmin"
+              ? navigate("/superadmin-dashboard")
+              : navigate("/admin-dashboard")
+          }
+          className="bg-blue-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 w-full sm:w-auto"
         >
           ← Back to Dashboard
         </button>

@@ -31,15 +31,27 @@ const Login = () => {
         password,
       });
 
+      const { user, token } = response.data;
+
+      // redux store update
       dispatch(
         setUser({
-          user: response.data.user,
-          token: response.data.token,
+          user,
+          token,
         })
       );
 
-      localStorage.setItem("token", response.data.token);
-      navigate("/admin-dashboard");
+      // token save
+      localStorage.setItem("token", token);
+
+      // 🔥 role based redirect
+      if (user.role === "superadmin") {
+        navigate("/superadmin-dashboard");
+      } else if (user.role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/login"); // fallback
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Try again.");
     }

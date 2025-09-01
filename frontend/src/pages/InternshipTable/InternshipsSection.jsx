@@ -4,6 +4,7 @@ import InternshipTable from "./InternshipTable";
 import axios from "axios";
 import Header from "../../components/Header";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux"; 
 
 const initialFormState = {
   name: "",
@@ -26,8 +27,10 @@ const InternshipsSection = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredInternships, setFilteredInternships] = useState([]);
-
+// 👇 user role le lo redux se
+const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  
 
   // Fetch all interns
   useEffect(() => {
@@ -240,8 +243,12 @@ const InternshipsSection = () => {
       </div>
 
       <div className="mt-4">
-        <button
-          onClick={() => navigate("/admin-dashboard")}
+      <button
+          onClick={() =>
+            user?.role === "superadmin"
+              ? navigate("/superadmin-dashboard")
+              : navigate("/admin-dashboard")
+          }
           className="bg-blue-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 w-full sm:w-auto"
         >
           ← Back to Dashboard

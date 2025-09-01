@@ -1,13 +1,13 @@
-// routes/auth.js
 import express from "express";
-import { loginUser } from "../controllers/authController.js";
-import { getProfile } from "../controllers/authController.js";
-import authMiddleware from "../middleware/authMiddleware.js"; // 👈 ye missing tha
-
+import { loginUser, getProfile, createAdmin } from "../controllers/authController.js";
+import authMiddleware, { authorizeRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.post("/login", loginUser);
-router.get("/me", authMiddleware, getProfile); // 👈 secure route
+router.get("/me", authMiddleware, getProfile);
+
+// 👑 Superadmin only
+router.post("/create-admin", authMiddleware, authorizeRoles("superadmin"), createAdmin);
 
 export default router;

@@ -48,4 +48,25 @@ router.put("/soft-delete/:id", async (req, res) => {
   }
 });
 
+router.get("/paid", async (req, res) => {
+  try {
+    // Find trainings where some amount has been paid
+    const paidTrainings = await Training.find({
+      "payment.paid": { $gt: 0 },
+      deleted: false
+    });
+
+    // Calculate total payout from paid amounts
+    const totalPayout = paidTrainings.reduce(
+      (acc, t) => acc + (t.payment.paid || 0),
+      0
+    );
+
+    res.json({ trainings: paidTrainings, totalPayout });
+  } catch (error) {
+    console.error("Error fetching paid trainings:", error);
+    res.status(500).json({ message: "Error fetching paid trainings", error });
+  }
+});
+
 export default router;
