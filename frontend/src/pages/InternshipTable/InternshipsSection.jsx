@@ -12,7 +12,6 @@ const initialFormState = {
   endDate: "",
   isContinuing: false,
   gender: "",
-  university: "",
   domain: "",
   type: "",
   payment: "",
@@ -54,7 +53,7 @@ const InternshipsSection = () => {
       (intern) =>
         intern.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         intern.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        intern.university.toLowerCase().includes(searchTerm.toLowerCase())
+        intern.domain?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredInternships(results);
   }, [searchTerm, internships]);
@@ -83,7 +82,6 @@ const InternshipsSection = () => {
 
     const payload = { ...formData };
     if (formData.isContinuing) payload.endDate = null; // backend gets null
-    
 
     try {
       if (isEditing) {
@@ -125,19 +123,18 @@ const InternshipsSection = () => {
     }
   };
 
-// Edit intern
-const handleEdit = (intern) => {
-  setFormData({
-    ...intern,
-    joinDate: new Date(intern.joinDate).toISOString().split("T")[0],
-    endDate: intern.endDate === "Continue" ? "" : new Date(intern.endDate).toISOString().split("T")[0],
-    isContinuing: intern.endDate === "Continue", // ✅ checkbox check if continuing
-  });
-  
-  setIsEditing(true);
-  setShowForm(true);
-};
+  // Edit intern
+  const handleEdit = (intern) => {
+    setFormData({
+      ...intern,
+      joinDate: new Date(intern.joinDate).toISOString().split("T")[0],
+      endDate: intern.endDate === "Continue" ? "" : new Date(intern.endDate).toISOString().split("T")[0],
+      isContinuing: intern.endDate === "Continue", // ✅ checkbox check if continuing
+    });
 
+    setIsEditing(true);
+    setShowForm(true);
+  };
 
   const handleCancelEdit = () => {
     setFormData(initialFormState);
@@ -205,7 +202,6 @@ const handleEdit = (intern) => {
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
-              <input type="text" name="university" value={formData.university} onChange={handleChange} placeholder="University" className="p-2 border rounded" />
               <input type="text" name="domain" value={formData.domain} onChange={handleChange} placeholder="Domain" className="p-2 border rounded" required />
 
               <select name="type" value={formData.type} onChange={handleChange} className="p-2 border rounded" required>

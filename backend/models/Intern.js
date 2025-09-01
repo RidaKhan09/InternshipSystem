@@ -2,11 +2,10 @@ import mongoose from "mongoose";
 
 const internSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  contact: { type: String},
+  contact: { type: String },
   joinDate: { type: Date, required: true },
-  endDate: { type: Date,default: null  },
+  endDate: { type: Date, default: null },
   gender: { type: String, required: true },
-  university: { type: String },
   domain: { type: String },
   type: { type: String, enum: ["internship", "training"], required: true },
   payment: { type: mongoose.Schema.Types.Mixed },

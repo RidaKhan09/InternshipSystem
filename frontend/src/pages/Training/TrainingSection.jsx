@@ -12,7 +12,6 @@ const initialFormState = {
   endDate: "",
   isContinuing: false,
   gender: "",
-  university: "",
   domain: "",
   type: "training",
   payment: { total: "", paid: "" },
@@ -123,7 +122,7 @@ const TrainingsSection = () => {
       !t.deleted &&
       (t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         t.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.university.toLowerCase().includes(searchTerm.toLowerCase()))
+        t.domain.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -222,15 +221,6 @@ const TrainingsSection = () => {
               <option value="female">Female</option>
             </select>
 
-            <input
-              type="text"
-              name="university"
-              placeholder="University"
-              value={formData.university}
-              onChange={handleChange}
-              className="border p-2 rounded"
-              required
-            />
             <input
               type="text"
               name="domain"

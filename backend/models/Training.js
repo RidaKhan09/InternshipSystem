@@ -6,8 +6,7 @@ const trainingSchema = new mongoose.Schema({
   joinDate: { type: Date, required: true },
   endDate: { type: Date },
   isContinuing: { type: Boolean, default: false },
-  gender: { type: String, required: true },
-  university: { type: String, required: true },
+  gender: { type: String, required: true }, // ye reh gaya
   domain: { type: String, required: true },
   type: { type: String, default: "training" },
 

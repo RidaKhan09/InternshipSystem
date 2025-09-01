@@ -72,9 +72,6 @@ const InternshipTable = ({ data, onEdit, onSoftDelete }) => {
                 Gender
               </th>
               <th className="p-2 text-left text-sm font-medium text-gray-500">
-                University
-              </th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">
                 Domain
               </th>
               <th className="p-2 text-left text-sm font-medium text-gray-500">
@@ -106,11 +103,7 @@ const InternshipTable = ({ data, onEdit, onSoftDelete }) => {
                     ? "Continue"
                     : new Date(intern.endDate).toLocaleDateString()}
                 </td>
-
                 <td className="p-2 text-sm text-gray-600">{intern.gender}</td>
-                <td className="p-2 text-sm text-gray-600">
-                  {intern.university}
-                </td>
                 <td className="p-2 text-sm text-gray-600">{intern.domain}</td>
                 <td className="p-2 text-sm text-gray-600 capitalize">
                   {intern.type}
@@ -152,7 +145,6 @@ const InternshipTable = ({ data, onEdit, onSoftDelete }) => {
                 : "Continue"}
             </p>
             <p className="text-sm text-gray-600">👤 {intern.gender}</p>
-            <p className="text-sm text-gray-600">🎓 {intern.university}</p>
             <p className="text-sm text-gray-600">💻 {intern.domain}</p>
             <p className="text-sm text-gray-600">📌 {intern.type}</p>
             <div className="mt-2">{renderPaymentInfo(intern)}</div>

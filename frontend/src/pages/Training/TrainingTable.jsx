@@ -19,7 +19,7 @@ const TrainingTable = ({ data, onEdit, onSoftDelete }) => {
               <th className="p-2 text-left text-sm font-medium text-gray-500">Contact</th>
               <th className="p-2 text-left text-sm font-medium text-gray-500">Join Date</th>
               <th className="p-2 text-left text-sm font-medium text-gray-500">End Date</th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">University</th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">Gender</th>
               <th className="p-2 text-left text-sm font-medium text-gray-500">Domain</th>
               <th className="p-2 text-left text-sm font-medium text-gray-500">Total Fees</th>
               <th className="p-2 text-left text-sm font-medium text-gray-500">Paid</th>
@@ -45,7 +45,7 @@ const TrainingTable = ({ data, onEdit, onSoftDelete }) => {
                   <td className="p-2 text-sm text-gray-600">
                     {t.endDate ? new Date(t.endDate).toLocaleDateString() : "Continue"}
                   </td>
-                  <td className="p-2">{t.university}</td>
+                  <td className="p-2">{t.gender}</td>
                   <td className="p-2">{t.domain}</td>
                   <td className="p-2 text-sm text-blue-600 font-semibold">{total}</td>
                   <td className="p-2 text-sm text-green-600 font-semibold">{paid}</td>
@@ -91,7 +91,7 @@ const TrainingTable = ({ data, onEdit, onSoftDelete }) => {
                 📅 {new Date(t.joinDate).toLocaleDateString()} →{" "}
                 {t.endDate ? new Date(t.endDate).toLocaleDateString() : "Continue"}
               </p>
-              <p className="text-sm text-gray-600">🎓 {t.university}</p>
+              <p className="text-sm text-gray-600">🚻 {t.gender}</p>
               <p className="text-sm text-gray-600">💻 {t.domain}</p>
               <div className="mt-2 flex justify-between text-sm">
                 <span className="text-blue-600 font-semibold">Total: {total}</span>
