@@ -61,6 +61,26 @@ router.put("/soft-delete/:id", async (req, res) => {
   }
 });
 
+router.get("/paid", async (req, res) => {
+  try {
+    // Correct model use karo
+    const paidInternships = await Intern.find({
+      payment: "paid", // ya boolean use kar rahe ho to true check karo
+      deleted: false
+    });
+
+    // Calculate total stipend
+    const totalPayout = paidInternships.reduce(
+      (acc, i) => acc + (i.stipend || 0),
+      0
+    );
+
+    res.json({ interns: paidInternships, totalPayout });
+  } catch (error) {
+    console.error("Error fetching paid internships:", error);
+    res.status(500).json({ message: "Error fetching paid internships", error });
+  }
+});
 
 
 export default router;

@@ -1,44 +1,9 @@
 import React, { useState } from "react";
-import { Trash2, Edit, CheckCircle, XCircle, User } from "lucide-react";
+import { Trash2, Edit, User } from "lucide-react";
 
 const InternshipTable = ({ data, onEdit, onSoftDelete }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-
-  const renderPaymentInfo = (intern) => {
-    const { type, payment } = intern;
-
-    if (type === "internship") {
-      const isPaid = payment === "paid";
-      const statusClass = isPaid
-        ? "bg-green-100 text-green-600"
-        : "bg-red-100 text-red-600";
-      const statusText = isPaid ? "Paid" : "Unpaid";
-      const statusIcon = isPaid ? (
-        <CheckCircle size={16} />
-      ) : (
-        <XCircle size={16} />
-      );
-      return (
-        <span
-          className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${statusClass}`}
-        >
-          {statusIcon} {statusText}
-        </span>
-      );
-    }
-
-    if (type === "training" && typeof payment === "object" && payment) {
-      return (
-        <span className="flex flex-col text-blue-600 text-sm">
-          <span>Paid: {payment.paid}</span>
-          <span>Remaining: {payment.total - payment.paid}</span>
-        </span>
-      );
-    }
-
-    return <span className="text-gray-500 text-sm">No info</span>;
-  };
 
   const activeData = data.filter((intern) => !intern.deleted);
   const totalPages = Math.ceil(activeData.length / itemsPerPage);
@@ -56,33 +21,16 @@ const InternshipTable = ({ data, onEdit, onSoftDelete }) => {
         <table className="w-full border-collapse">
           <thead className="bg-gray-100">
             <tr className="border-b border-gray-200">
-              <th className="p-2 text-left text-sm font-medium text-gray-500">
-                Name
-              </th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">
-                Contact
-              </th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">
-                Join Date
-              </th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">
-                End Date
-              </th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">
-                Gender
-              </th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">
-                Domain
-              </th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">
-                Type
-              </th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">
-                Payment
-              </th>
-              <th className="p-2 text-center text-sm font-medium text-gray-500">
-                Actions
-              </th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">Name</th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">Contact</th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">Join Date</th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">End Date</th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">Gender</th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">Domain</th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">Type</th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">Payment</th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">Stipend</th> {/* ✅ New Column */}
+              <th className="p-2 text-center text-sm font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -99,16 +47,25 @@ const InternshipTable = ({ data, onEdit, onSoftDelete }) => {
                   {new Date(intern.joinDate).toLocaleDateString()}
                 </td>
                 <td className="p-2 text-sm text-gray-600">
-                  {intern.endDate === "Continue"
-                    ? "Continue"
-                    : new Date(intern.endDate).toLocaleDateString()}
+                  {intern.endDate
+                    ? new Date(intern.endDate).toLocaleDateString()
+                    : "Continue"}
                 </td>
                 <td className="p-2 text-sm text-gray-600">{intern.gender}</td>
                 <td className="p-2 text-sm text-gray-600">{intern.domain}</td>
-                <td className="p-2 text-sm text-gray-600 capitalize">
-                  {intern.type}
+                <td className="p-2 text-sm text-gray-600 capitalize">{intern.type}</td>
+
+                {/* ✅ Payment */}
+                <td className="p-2 text-sm">
+                  {intern.payment === "paid" ? "Paid" : "Unpaid"}
                 </td>
-                <td className="p-2">{renderPaymentInfo(intern)}</td>
+
+                {/* ✅ Stipend */}
+                <td className="p-2 text-sm">
+                  {intern.payment === "paid" ? `${intern.stipend}` : "-"}
+                </td>
+
+                {/* Actions */}
                 <td className="p-2 flex justify-center gap-2 items-center">
                   <button
                     onClick={() => onEdit(intern)}
@@ -147,7 +104,12 @@ const InternshipTable = ({ data, onEdit, onSoftDelete }) => {
             <p className="text-sm text-gray-600">👤 {intern.gender}</p>
             <p className="text-sm text-gray-600">💻 {intern.domain}</p>
             <p className="text-sm text-gray-600">📌 {intern.type}</p>
-            <div className="mt-2">{renderPaymentInfo(intern)}</div>
+            <p className="text-sm text-gray-600">
+              💵 {intern.payment === "paid" ? "Paid" : "Unpaid"}
+            </p>
+            {intern.payment === "paid" && (
+              <p className="text-sm text-gray-600">💰 Stipend: ₹{intern.stipend}</p>
+            )}
 
             {/* Actions */}
             <div className="flex justify-end gap-3 mt-3">

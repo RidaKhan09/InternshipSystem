@@ -7,8 +7,9 @@ const internSchema = new mongoose.Schema({
   endDate: { type: Date, default: null },
   gender: { type: String, required: true },
   domain: { type: String },
-  type: { type: String, enum: ["internship", "training"], required: true },
-  payment: { type: mongoose.Schema.Types.Mixed },
+  type: { type: String, enum: ["internship"], required: true },
+  payment: { type: mongoose.Schema.Types.Mixed }, // can be true/false or object
+  stipend: { type: Number, default: 0 }, // 💰 per month stipend if paid
   deleted: { type: Boolean, default: false }, // ✅ Soft delete flag
 }, { timestamps: true });
 
