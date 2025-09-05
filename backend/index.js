@@ -20,10 +20,22 @@ import Notification from "./models/Notification.js";
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    credentials: true,
+  },
+});
+
 
 // Middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // 👈 React ka frontend
+    credentials: true, // 👈 important (cookies / tokens allowed)
+  })
+);
+
 app.use(express.json());
 
 // Routes
@@ -43,7 +55,7 @@ const startServer = async () => {
   server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 
   // ---- Cron job ----
-  cron.schedule("* * * * *", async () => { // every minute for testing
+  cron.schedule("0 0 * * *", async () => { // every minute for testing
     console.log("🔔 Running 3-month check...");
 
     const today = new Date();
@@ -106,41 +118,41 @@ const startServer = async () => {
     }
   });
 
-  // ---- Test route ----
-  app.get("/api/test-cron", async (req, res) => {
-    const today = new Date();
-    today.setHours(0,0,0,0);
+  // // ---- Test route ----
+  // app.get("/api/test-cron", async (req, res) => {
+  //   const today = new Date();
+  //   today.setHours(0,0,0,0);
 
-    const interns = await Intern.find();
-    let created = [];
+  //   const interns = await Intern.find();
+  //   let created = [];
 
-    for (let intern of interns) {
-      if (!intern.joinDate) continue;
+  //   for (let intern of interns) {
+  //     if (!intern.joinDate) continue;
 
-      const joinDate = new Date(intern.joinDate);
-      const endDate = new Date(joinDate);
-      endDate.setMonth(endDate.getMonth() + 3);
-      endDate.setHours(0,0,0,0);
+  //     const joinDate = new Date(intern.joinDate);
+  //     const endDate = new Date(joinDate);
+  //     endDate.setMonth(endDate.getMonth() + 3);
+  //     endDate.setHours(0,0,0,0);
 
-      if(today >= endDate) {
-        const exists = await Notification.findOne({
-          userId: intern._id,
-          type: "intern",
-        });
-        if(!exists) {
-          const newNotif = await Notification.create({
-            userId: intern._id,
-            type: "intern",
-            message: `${intern.name} has completed 3 months Internship.`,
-          });
-          created.push(newNotif);
-          io.emit("newNotification", newNotif); // real-time
-        }
-      }
-    }
+  //     if(today >= endDate) {
+  //       const exists = await Notification.findOne({
+  //         userId: intern._id,
+  //         type: "intern",
+  //       });
+  //       if(!exists) {
+  //         const newNotif = await Notification.create({
+  //           userId: intern._id,
+  //           type: "intern",
+  //           message: `${intern.name} has completed 3 months Internship.`,
+  //         });
+  //         created.push(newNotif);
+  //         io.emit("newNotification", newNotif); // real-time
+  //       }
+  //     }
+  //   }
 
-    res.json({ success: true, created });
-  });
+  //   res.json({ success: true, created });
+  // });
 
 };
 

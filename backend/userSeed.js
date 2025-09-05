@@ -28,24 +28,6 @@ const userRegister = async () => {
       console.log("✅ Superadmin created!");
     }
 
-    // ADMIN
-    const existingAdmin = await User.findOne({ email: process.env.ADMIN_EMAIL });
-    if (existingAdmin) {
-      console.log("Admin already exists!");
-    } else {
-      const hashPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
-
-      const admin = new User({
-        name: process.env.ADMIN_NAME || "Admin",
-        email: process.env.ADMIN_EMAIL,
-        password: hashPassword,
-        role: "admin",
-      });
-
-      await admin.save();
-      console.log("✅ Admin created!");
-    }
-
   } catch (error) {
     console.log("❌ Error creating users:", error);
   } finally {

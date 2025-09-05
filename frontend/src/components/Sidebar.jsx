@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import logo from "../assets/IIFALOGO.png";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,8 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+
+  const sidebarRef = useRef(null); // 👈 ref for sidebar
 
   const { user } = useSelector((state) => state.user);
 
@@ -29,6 +31,29 @@ const Sidebar = () => {
   const dashboardPath =
     user?.role === "superadmin" ? "/superadmin-dashboard" : "/admin-dashboard";
 
+  // ✅ Close sidebar on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        !event.target.closest("button") // ignore clicks on the hamburger button
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
     <>
       {/* Top bar for mobile */}
@@ -40,6 +65,7 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
+        ref={sidebarRef}
         className={`fixed md:static top-0 left-0 bottom-0 h-screen md:h-full w-64 bg-white pt-10 pb-6 px-4 shadow-md flex flex-col transform transition-transform duration-300 z-50 overflow-y-auto
        ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
       >
@@ -92,6 +118,15 @@ const Sidebar = () => {
                   >
                     <span className="mr-3">📈</span>
                     <span>Training Stats</span>
+                  </Link>
+                </li>
+                <li className="mb-4">
+                  <Link
+                    to="/manage-admins"
+                    className={linkClasses("/manage-admins")}
+                  >
+                    <span className="mr-3">👤</span>
+                    <span>Manage Admins</span>
                   </Link>
                 </li>
               </>

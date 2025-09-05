@@ -11,6 +11,7 @@ import Internships from "./pages/InternshipTable/MainIntern";
 import Training from "./pages/Training/MainTraningPage";
 import InternshipStatePage from "./pages/SuperAdmin/InternshipStatePage";
 import TrainingStatePage from "./pages/superAdmin/TrainingStatePage";
+import ManageAdminsPage from "./pages/ManageAdminsPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -105,6 +106,14 @@ function App() {
           element={
             <ProtectedRoute roles={["superadmin"]}>
               <TrainingStatePage />
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/manage-admins"
+          element={
+            <ProtectedRoute roles={["superadmin"]}>
+              <ManageAdminsPage />
             </ProtectedRoute>
           }
         />

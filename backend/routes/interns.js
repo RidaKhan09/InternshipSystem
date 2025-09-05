@@ -4,21 +4,16 @@ import Intern from "../models/Intern.js";
 const router = express.Router();
 
 // Get all interns
+// Get all interns
 router.get("/", async (req, res) => {
   try {
     const interns = await Intern.find().sort({ createdAt: -1 });
-
-    // Format endDate: agar null ho toh "Continue" show kare
-    const formattedInterns = interns.map(intern => ({
-      ...intern._doc,
-      endDate: intern.endDate || "Continue"
-    }));
-
-    res.json(formattedInterns);
+    res.json(interns); // sirf asli data bhej do
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // Add new intern
 router.post("/", async (req, res) => {

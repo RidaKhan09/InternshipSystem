@@ -5,6 +5,7 @@ const internSchema = new mongoose.Schema({
   contact: { type: String },
   joinDate: { type: Date, required: true },
   endDate: { type: Date, default: null },
+  
   gender: { type: String, required: true },
   domain: { type: String },
   type: { type: String, enum: ["internship"], required: true },

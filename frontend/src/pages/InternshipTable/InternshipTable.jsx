@@ -21,16 +21,37 @@ const InternshipTable = ({ data, onEdit, onSoftDelete }) => {
         <table className="w-full border-collapse">
           <thead className="bg-gray-100">
             <tr className="border-b border-gray-200">
-              <th className="p-2 text-left text-sm font-medium text-gray-500">Name</th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">Contact</th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">Join Date</th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">End Date</th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">Gender</th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">Domain</th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">Type</th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">Payment</th>
-              <th className="p-2 text-left text-sm font-medium text-gray-500">Stipend</th> {/* ✅ New Column */}
-              <th className="p-2 text-center text-sm font-medium text-gray-500">Actions</th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">
+                Name
+              </th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">
+                Contact
+              </th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">
+                Join Date
+              </th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">
+                End Date
+              </th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">
+                Gender
+              </th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">
+                Domain
+              </th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">
+                Type
+              </th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">
+                Payment
+              </th>
+              <th className="p-2 text-left text-sm font-medium text-gray-500">
+                Stipend
+              </th>{" "}
+              {/* ✅ New Column */}
+              <th className="p-2 text-center text-sm font-medium text-gray-500">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -51,9 +72,12 @@ const InternshipTable = ({ data, onEdit, onSoftDelete }) => {
                     ? new Date(intern.endDate).toLocaleDateString()
                     : "Continue"}
                 </td>
+
                 <td className="p-2 text-sm text-gray-600">{intern.gender}</td>
                 <td className="p-2 text-sm text-gray-600">{intern.domain}</td>
-                <td className="p-2 text-sm text-gray-600 capitalize">{intern.type}</td>
+                <td className="p-2 text-sm text-gray-600 capitalize">
+                  {intern.type}
+                </td>
 
                 {/* ✅ Payment */}
                 <td className="p-2 text-sm">
@@ -108,7 +132,9 @@ const InternshipTable = ({ data, onEdit, onSoftDelete }) => {
               💵 {intern.payment === "paid" ? "Paid" : "Unpaid"}
             </p>
             {intern.payment === "paid" && (
-              <p className="text-sm text-gray-600">💰 Stipend: ₹{intern.stipend}</p>
+              <p className="text-sm text-gray-600">
+                💰 Stipend: ₹{intern.stipend}
+              </p>
             )}
 
             {/* Actions */}
